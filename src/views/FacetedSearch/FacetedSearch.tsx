@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import styles from "@/styles/FacetedSearch.module.css";
 import Select from "react-select";
 
 const options = [
@@ -63,8 +63,7 @@ export default function FacetedSearch() {
   };
 
   return (
-    <>
-      <div>Faceted search</div>
+    <div className={styles.facetContainer}>
       <div>
         <div>multi facet:</div>
         <Select
@@ -87,6 +86,6 @@ export default function FacetedSearch() {
           value={state}
         />
       </div>
-    </>
+    </div>
   );
 }

@@ -5,8 +5,9 @@ import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import useGetData from "./api/useGetData";
 import FacetedSearch from "@/views/FacetedSearch/FacetedSearch";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useKeyPress } from "@/hooks/useKeyPress";
+import { ProductList } from "@/views/ProductList/ProductList";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,20 +44,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div>
-          <input value={searchInput} onChange={searchBoxOnChange} />
-        </div>
-        <FacetedSearch />
-        {isLoading && <div>is loading ...</div>}
-        {isError && <div>Error!</div>}
-        <div>
-          <ul>
-            {data?.map((item: any) => (
-              <li className={styles.item} key={item.id}>
-                {item?.title}
-              </li>
-            ))}
-          </ul>
+        <div className={styles.container}>
+          <div>
+            <label>Search</label>
+            <input value={searchInput} onChange={searchBoxOnChange} />
+          </div>
+          <div>
+            <FacetedSearch />
+          </div>
+          <div>
+            <ProductList isError={isError} isLoading={isLoading} list={data} />
+          </div>
         </div>
       </main>
     </>
