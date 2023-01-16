@@ -1,7 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
-import useGetData from "./api/useGetData";
 import FacetedSearch from "@/views/FacetedSearch/FacetedSearch";
 import { useRouter } from "next/router";
 import { useKeyPress } from "@/hooks/useKeyPress";
