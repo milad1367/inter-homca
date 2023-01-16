@@ -1,6 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import useGetData from "./api/useGetData";
@@ -9,15 +7,12 @@ import { useRouter } from "next/router";
 import { useKeyPress } from "@/hooks/useKeyPress";
 import { ProductList } from "@/views/ProductList/ProductList";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function Home() {
   const { query, push } = useRouter();
-  const { search, select } = query;
+  const { search } = query;
   const pressEnter = useKeyPress(13);
   const [searchInput, setSearchInput] = useState("");
-  const filter = select?.toString().split("-");
-  const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
+
   useEffect(() => {
     setSearchInput(search ? search.toString() : "");
   }, [search]);
@@ -30,6 +25,7 @@ export default function Home() {
       });
     }
   }, [pressEnter]);
+
   const searchBoxOnChange = (e: any) => {
     e.preventDefault();
     setSearchInput(e.target.value);
@@ -53,7 +49,7 @@ export default function Home() {
             <FacetedSearch />
           </div>
           <div>
-            <ProductList isError={isError} isLoading={isLoading} list={data} />
+            <ProductList />
           </div>
         </div>
       </main>

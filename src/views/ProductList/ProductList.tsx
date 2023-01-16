@@ -1,11 +1,12 @@
-type Products = {
-  list: any[];
-  isLoading: boolean;
-  isError: any;
-};
+import useGetData from "@/pages/api/useGetData";
 import styles from "@/styles/FacetedSearch.module.css";
-import { isError } from "@tanstack/react-query";
-export function ProductList({ list, isError, isLoading }: Products) {
+import { useRouter } from "next/router";
+
+export function ProductList() {
+  const { query } = useRouter();
+  const { search, select } = query;
+  const filter = select?.toString().split("-");
+  const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
   if (isLoading) {
     return <div>is loading ...</div>;
   }
@@ -15,9 +16,9 @@ export function ProductList({ list, isError, isLoading }: Products) {
 
   return (
     <>
-      {list?.map((item: any) => (
+      {data?.map((item: any) => (
         <div className={styles.item} key={item.id}>
-          {item?.title}
+          {item?.id}- {item?.title}
         </div>
       ))}
     </>
