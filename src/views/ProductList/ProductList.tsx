@@ -1,21 +1,32 @@
 import useGetData from "@/pages/api/useGetData";
 import { useRouter } from "next/router";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useScroll } from "react-use";
+import { useDebounce, useSessionStorage } from "usehooks-ts";
 
 export function ProductList() {
   const { query } = useRouter();
   const { search, select } = query;
   const filter = select?.toString().split("-");
   const parentRef = React.useRef(null);
+  const [value, setValue] = useSessionStorage("position-y", 0);
   const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
   // The virtualizer
+  const { y } = useScroll(parentRef);
+
+  const debouncedScrollPosition = useDebounce(y, 500); // TODO
+
+  useEffect(() => {
+    setValue(debouncedScrollPosition);
+  }, [debouncedScrollPosition, setValue]);
+
   const rowVirtualizer = useVirtualizer({
     count: data?.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 35,
-    initialOffset: 300,
+    estimateSize: () => 50,
+    initialOffset: value, // TODO. WE HAVE A BUG, WE HAVE TO UPDATE STATE
   });
 
   if (isLoading) {
