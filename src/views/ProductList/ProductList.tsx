@@ -1,21 +1,21 @@
 import useGetData from "@/pages/api/useGetData";
 import { useRouter } from "next/router";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { useVirtualizer, observeWindowOffset } from "@tanstack/react-virtual";
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { useScroll } from "react-use";
 import { useDebounce, useSessionStorage } from "usehooks-ts";
+import { useScroll } from "@/hooks/useScroll";
 
 export function ProductList() {
   const { query } = useRouter();
   const { search, select } = query;
   const filter = select?.toString().split("-");
   const parentRef = React.useRef(null);
-  const [value, setValue] = useSessionStorage("position-y", 0);
+  const [value, setValue] = useSessionStorage("virtualizer_scrollOffset", 0);
   const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
-  // The virtualizer
-  const { y } = useScroll(parentRef);
 
+  const { y } = useScroll(parentRef);
+  console.log(y);
   const debouncedScrollPosition = useDebounce(y, 500); // TODO
 
   useEffect(() => {
@@ -25,8 +25,15 @@ export function ProductList() {
   const rowVirtualizer = useVirtualizer({
     count: data?.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 50,
-    initialOffset: value, // TODO. WE HAVE A BUG, WE HAVE TO UPDATE STATE
+    estimateSize: () => 35,
+    initialOffset: (() => {
+      if (typeof sessionStorage !== "undefined") {
+        return parseInt(
+          sessionStorage.getItem("virtualizer_scrollOffset") || ""
+        );
+      }
+      return 0;
+    })(), // TODO. WE HAVE A BUG, WE HAVE TO UPDATE STATE
   });
 
   if (isLoading) {
