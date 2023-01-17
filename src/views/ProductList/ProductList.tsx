@@ -2,8 +2,7 @@ import useGetData from "@/pages/api/useGetData";
 import { useRouter } from "next/router";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React from "react";
-
-import styles from "@/styles/ProductList.module.css";
+import Link from "next/link";
 
 export function ProductList() {
   const { query } = useRouter();
@@ -16,6 +15,7 @@ export function ProductList() {
     count: data?.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 35,
+    initialOffset: 300,
   });
 
   if (isLoading) {
@@ -54,7 +54,9 @@ export function ProductList() {
                 transform: `translateY(${virtualRow.start}px)`,
               }}
             >
-              {data[virtualRow.index].id}- {data[virtualRow.index].title}
+              <Link href={`/product/${data[virtualRow.index].id}`}>
+                {data[virtualRow.index].id}- {data[virtualRow.index].title}
+              </Link>
             </div>
           ))}
         </div>
