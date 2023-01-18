@@ -14,7 +14,7 @@ export function ProductList() {
   const [, setValue] = useSessionStorage("virtualizer_scrollOffset", 0);
   const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
   const { y } = useScroll(parentRef);
-  const debouncedScrollPosition = useDebounce(y, 500); // TODO
+  const debouncedScrollPosition = useDebounce(y, 500);
 
   useEffect(() => {
     setValue(debouncedScrollPosition);
