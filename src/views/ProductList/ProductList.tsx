@@ -73,7 +73,11 @@ export function ProductList() {
                 transform: `translateY(${virtualRow.start}px)`,
               }}
             >
-              <Link href={`/product/${index}`}>
+              <Link
+                href={`/product/${decodeURIComponent(
+                  data[virtualRow.index].title.replaceAll(" ", "_")
+                )}`}
+              >
                 {data[virtualRow.index].id}- {data[virtualRow.index].title}
               </Link>
             </div>
