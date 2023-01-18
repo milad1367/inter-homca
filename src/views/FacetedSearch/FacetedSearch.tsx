@@ -57,7 +57,7 @@ export default function FacetedSearch() {
   return (
     <div className={styles.facetContainer}>
       <div>
-        <div>multi price:</div>
+        <div>Price multi mode:</div>
         <Select
           instanceId={"multi"}
           defaultValue={null}
@@ -70,7 +70,7 @@ export default function FacetedSearch() {
       </div>
 
       <div>
-        <div>toggle facet:</div>
+        <div>Price toggle mode:</div>
         <Select
           instanceId={"toggle"}
           defaultValue={null}
