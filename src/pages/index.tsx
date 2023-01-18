@@ -7,8 +7,9 @@ import { useKeyPress } from "@/hooks/useKeyPress";
 import { ProductList } from "@/views/ProductList/ProductList";
 
 export default function Home() {
-  const { query, push } = useRouter();
-  const { search } = query;
+  const router = useRouter();
+  const { query } = router;
+  const { search } = router?.query;
   const pressEnter = useKeyPress(13);
   const [searchInput, setSearchInput] = useState("");
 
@@ -18,12 +19,34 @@ export default function Home() {
   useEffect(() => {
     // TODO remove param when input is empty and user push enter
     if (pressEnter) {
-      push({
+      router.push({
         pathname: "/",
         query: { ...query, search: encodeURI(searchInput) },
       });
     }
-  }, [pressEnter]);
+  }, [pressEnter, router, query, searchInput]);
+  useEffect(() => {
+    let happens = false;
+    if (query) {
+      Object.keys(query).map((key) => {
+        if (query[key] === "") {
+          happens = true;
+          delete router.query[key];
+        }
+      });
+      if (happens) {
+        router.push(
+          {
+            pathname: "/",
+            query: { ...router.query },
+          },
+          undefined,
+          {}
+        );
+      }
+    }
+    happens = false;
+  }, [router, search, query]);
 
   const searchBoxOnChange = (e: any) => {
     e.preventDefault();

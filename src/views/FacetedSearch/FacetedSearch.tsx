@@ -32,15 +32,6 @@ export default function FacetedSearch() {
         query: { ...router.query, select: encodeURI(option.value) }, // TODO search about decode, check url in chrome
       });
     }
-    delete router.query.select;
-    router.push(
-      {
-        pathname: "/",
-        query: { ...router.query },
-      },
-      undefined,
-      {}
-    );
   };
 
   const multiOnChange = (option: readonly any[]) => {

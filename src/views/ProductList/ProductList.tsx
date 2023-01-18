@@ -1,6 +1,6 @@
 import useGetData from "@/pages/api/useGetData";
 import { useRouter } from "next/router";
-import { useVirtualizer, observeWindowOffset } from "@tanstack/react-virtual";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useDebounce, useSessionStorage } from "usehooks-ts";
@@ -15,7 +15,6 @@ export function ProductList() {
   const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
 
   const { y } = useScroll(parentRef);
-  console.log(y);
   const debouncedScrollPosition = useDebounce(y, 500); // TODO
 
   useEffect(() => {
