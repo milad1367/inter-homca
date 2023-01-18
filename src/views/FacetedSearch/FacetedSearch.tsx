@@ -3,33 +3,34 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/FacetedSearch.module.css";
 import Select from "react-select";
 
-const options = [
-  { value: "title", label: "Title" },
-  { value: "price", label: "Price" },
-  { value: "rating", label: "Rating" },
-  { value: "brand", label: "Brand" },
+const priceOptions = [
+  { value: "50000000", label: "50" },
+  { value: "80000000", label: "80" },
+  { value: "300000000", label: "300" },
+  { value: "900000000", label: "900" },
+  { value: "1500000000", label: "1500" },
 ];
 
 export default function FacetedSearch() {
   const router = useRouter();
   const [state, setState] = useState<any>(null); //TODO
-  const { select } = router?.query;
+  const { price } = router?.query;
 
   useEffect(() => {
-    const t = options.filter((item) =>
-      select
+    const t = priceOptions.filter((item) =>
+      price
         ?.toString()
         ?.split("-")
         ?.find((value) => item.value === value)
     );
     setState(t);
-  }, [select]);
+  }, [price]);
 
   const toggleOnChange = (option: any) => {
     if (option?.value) {
       return router.push({
         pathname: "/",
-        query: { ...router.query, select: encodeURI(option.value) }, // TODO search about decode, check url in chrome
+        query: { ...router.query, price: encodeURI(option.value) }, // TODO search about decode, check url in chrome
       });
     }
   };
@@ -39,10 +40,10 @@ export default function FacetedSearch() {
     if (allOption) {
       return router.push({
         pathname: "/",
-        query: { ...router.query, select: encodeURI(allOption) }, // TODO search about decode, check url in chrome
+        query: { ...router.query, price: encodeURI(allOption) }, // TODO search about decode, check url in chrome
       });
     }
-    delete router.query.select;
+    delete router.query.price;
     router.push(
       {
         pathname: "/",
@@ -56,14 +57,15 @@ export default function FacetedSearch() {
   return (
     <div className={styles.facetContainer}>
       <div>
-        <div>multi facet:</div>
+        <div>multi price:</div>
         <Select
           instanceId={"multi"}
           defaultValue={null}
           isMulti
           onChange={multiOnChange}
-          options={options}
+          options={priceOptions}
           value={state}
+          placeholder={"Price"}
         />
       </div>
 
@@ -73,7 +75,7 @@ export default function FacetedSearch() {
           instanceId={"toggle"}
           defaultValue={null}
           onChange={toggleOnChange}
-          options={options}
+          options={priceOptions}
           value={state}
         />
       </div>

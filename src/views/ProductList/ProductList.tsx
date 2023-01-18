@@ -1,4 +1,4 @@
-import useGetData from "@/pages/api/useGetData";
+import useGetData from "@/service/useDivar";
 import { useRouter } from "next/router";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useEffect } from "react";
@@ -8,12 +8,11 @@ import { useScroll } from "@/hooks/useScroll";
 
 export function ProductList() {
   const { query } = useRouter();
-  const { search, select } = query;
-  const filter = select?.toString().split("-");
+  const { search, price } = query;
+  const filter = price?.toString().split("-");
   const parentRef = React.useRef(null);
-  const [value, setValue] = useSessionStorage("virtualizer_scrollOffset", 0);
+  const [, setValue] = useSessionStorage("virtualizer_scrollOffset", 0);
   const { data, isLoading, isError } = useGetData(search?.toString(), filter); //TODO think about better option search?.toString()
-
   const { y } = useScroll(parentRef);
   const debouncedScrollPosition = useDebounce(y, 500); // TODO
 
@@ -41,6 +40,9 @@ export function ProductList() {
   if (isError) {
     return <div>Error!</div>;
   }
+  if (data.length === 0) {
+    return <div>No result!</div>;
+  }
 
   return (
     <>
@@ -58,7 +60,7 @@ export function ProductList() {
             position: "relative",
           }}
         >
-          {rowVirtualizer.getVirtualItems().map((virtualRow) => (
+          {rowVirtualizer.getVirtualItems().map((virtualRow, index) => (
             <div
               key={virtualRow.index}
               className={virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"}
@@ -71,7 +73,7 @@ export function ProductList() {
                 transform: `translateY(${virtualRow.start}px)`,
               }}
             >
-              <Link href={`/product/${data[virtualRow.index].id}`}>
+              <Link href={`/product/${index}`}>
                 {data[virtualRow.index].id}- {data[virtualRow.index].title}
               </Link>
             </div>
