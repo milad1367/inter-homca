@@ -12,7 +12,6 @@ export default function Home() {
   const { search } = router?.query;
   const pressEnter = useKeyPress(13);
   const [searchInput, setSearchInput] = useState("");
-
   useEffect(() => {
     setSearchInput(search ? search.toString() : "");
   }, [search]);
@@ -21,7 +20,7 @@ export default function Home() {
     if (pressEnter) {
       router.push({
         pathname: "/",
-        query: { ...query, search: encodeURI(searchInput) },
+        query: { ...query, search: decodeURIComponent(searchInput) },
       });
     }
   }, [pressEnter, router, query, searchInput]);
